@@ -1,0 +1,48 @@
+.DS_Store
+backend/.env
+.env.*
+.python-version
+.venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+dist/
+build/
+node_modules/
+.next/
+coverage/
+terraform.tfstate
+terraform.tfstate.*
+.terraform/
+*.tfvars
+
+# Python
+*.pyc
+*.pyo
+*.egg-info/
+.eggs/
+
+# Environment
+.env
+.env.local
+*.env
+
+# Terraform
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/*.tfvars
+terraform/.terraform.lock.hcl
+!terraform/terraform.tfvars.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Docker
+*.log
+

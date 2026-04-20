@@ -1,0 +1,94 @@
+name: Deploy Alex
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - "frontend/**"
+      - "terraform/**"
+      - ".github/workflows/deploy-app.yml"
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: ${{ secrets.GCP_REGION }}
+  REPO_NAME: alex-repo
+  BACKEND_SERVICE: alex-api
+  FRONTEND_SERVICE: alex-web
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to GCP via WIF
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_APP_DEPLOYER_SA }}
+
+      - name: Set up gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker ${REGION}-docker.pkg.dev --quiet
+
+      - name: Build and push backend image
+        run: |
+          IMAGE=${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${BACKEND_SERVICE}
+          docker build --platform linux/amd64 \
+            -t ${IMAGE}:${{ github.sha }} \
+            -t ${IMAGE}:latest \
+            ./backend
+          docker push ${IMAGE}:${{ github.sha }}
+          docker push ${IMAGE}:latest
+
+      - name: Deploy backend
+        run: |
+          IMAGE=${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${BACKEND_SERVICE}:${{ github.sha }}
+          CONNECTION_NAME=$(gcloud sql instances describe alex-postgres --project=${PROJECT_ID} --format='value(connectionName)')
+          gcloud run deploy ${BACKEND_SERVICE} \
+            --image=${IMAGE} \
+            --region=${REGION} \
+            --project=${PROJECT_ID} \
+            --service-account=alex-backend-sa@${PROJECT_ID}.iam.gserviceaccount.com \
+            --add-cloudsql-instances=${CONNECTION_NAME} \
+            --set-env-vars=CLERK_ISSUER=${{ secrets.CLERK_ISSUER }},CLERK_JWKS_URL=${{ secrets.CLERK_JWKS_URL }},GCS_BUCKET_NAME=${PROJECT_ID}-alex-uploads,DB_NAME=alex,DB_USER=alex,INSTANCE_CONNECTION_NAME=${CONNECTION_NAME},OPENROUTER_MODEL=google/gemini-2.5-flash-lite,CORS_ORIGINS_RAW=* \
+            --set-secrets=OPENROUTER_API_KEY=alex-api-openrouter-api-key:latest,DB_PASSWORD=alex-api-db-password:latest \
+            --quiet
+
+      - name: Capture backend URL
+        id: backend_url
+        run: |
+          URL=$(gcloud run services describe ${BACKEND_SERVICE} --region=${REGION} --project=${PROJECT_ID} --format='value(status.url)')
+          echo "url=${URL}" >> "$GITHUB_OUTPUT"
+
+      - name: Build and push frontend image
+        run: |
+          IMAGE=${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${FRONTEND_SERVICE}
+          docker build --platform linux/amd64 \
+            --build-arg NEXT_PUBLIC_API_BASE_URL=${{ steps.backend_url.outputs.url }} \
+            --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }} \
+            -t ${IMAGE}:${{ github.sha }} \
+            -t ${IMAGE}:latest \
+            ./frontend
+          docker push ${IMAGE}:${{ github.sha }}
+          docker push ${IMAGE}:latest
+
+      - name: Deploy frontend
+        run: |
+          IMAGE=${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${FRONTEND_SERVICE}:${{ github.sha }}
+          gcloud run deploy ${FRONTEND_SERVICE} \
+            --image=${IMAGE} \
+            --region=${REGION} \
+            --project=${PROJECT_ID} \
+            --service-account=alex-frontend-sa@${PROJECT_ID}.iam.gserviceaccount.com \
+            --quiet
