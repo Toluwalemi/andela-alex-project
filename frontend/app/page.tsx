@@ -4,14 +4,10 @@ export default function HomePage() {
   return (
     <div className="grid">
       <section className="hero">
-        <div className="panel">
-          <p className="tagline">Informational portfolio guidance for individual investors</p>
-          <h1>Review allocation, diversification, and retirement readiness in one workflow.</h1>
-          <p>
-            Alex lets users upload or enter portfolios, stores historical snapshots, computes clear
-            portfolio metrics, and pairs them with AI-generated commentary that stays inside an
-            informational guidance boundary.
-          </p>
+        <div className="panel hero-copy">
+          <p className="eyebrow">Portfolio Guidance</p>
+          <h1>Understand your portfolio in minutes.</h1>
+          <p>Upload holdings, review diversification, and check retirement readiness.</p>
           <div className="nav-links">
             <Link href="/dashboard" className="button">
               Open dashboard
@@ -22,40 +18,34 @@ export default function HomePage() {
           </div>
         </div>
         <div className="panel">
-          <h2>What Alex covers</h2>
+          <p className="eyebrow">What Alex Does</p>
+          <h2>Simple inputs. Clear outputs.</h2>
           <div className="card-list">
             <div className="metric">
-              <strong>Portfolio Review</strong>
-              <span>Snapshot holdings, concentration, and sector exposure.</span>
+              <strong>Portfolio review</strong>
+              <span>See concentration, sector exposure, and position mix.</span>
             </div>
             <div className="metric">
-              <strong>Retirement Basics</strong>
-              <span>Simple projection engine with configurable risk profile assumptions.</span>
+              <strong>Retirement check</strong>
+              <span>Estimate whether current savings are on track.</span>
             </div>
             <div className="metric">
-              <strong>AI Commentary</strong>
-              <span>Structured recommendations with explicit assumptions and disclaimers.</span>
+              <strong>Readable report</strong>
+              <span>Turn raw numbers into a short plain-English summary.</span>
             </div>
           </div>
         </div>
       </section>
       <section className="grid two">
         <div className="panel">
-          <h2>Manual entry or CSV</h2>
-          <p>
-            V1 supports direct ticker entry and CSV import with a small, stable schema: ticker,
-            quantity, and optional cost basis.
-          </p>
+          <h2>Upload or enter holdings</h2>
+          <p className="muted">Use a CSV or enter holdings one by one.</p>
         </div>
         <div className="panel">
-          <h2>History preserved</h2>
-          <p>
-            Every import is stored as a portfolio snapshot so users can rerun analysis over time and
-            review past recommendations.
-          </p>
+          <h2>Keep past reports</h2>
+          <p className="muted">Alex stores snapshots so you can review changes over time.</p>
         </div>
       </section>
     </div>
   );
 }
-

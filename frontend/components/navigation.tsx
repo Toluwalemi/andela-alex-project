@@ -10,7 +10,7 @@ export function Navigation() {
         <Link href="/" className="wordmark">
           Alex
         </Link>
-        <div className="tagline">Agentic financial guidance for portfolios and retirement readiness</div>
+        <div className="tagline">Portfolio and retirement review</div>
       </div>
       <div className="nav-links">
         <Link href="/dashboard">Dashboard</Link>
@@ -34,4 +34,3 @@ export function Navigation() {
     </header>
   );
 }
-
