@@ -79,6 +79,7 @@ resource "google_project_iam_member" "app_deployer_roles" {
   for_each = toset([
     "roles/run.admin",
     "roles/artifactregistry.writer",
+    "roles/cloudsql.viewer",
   ])
 
   project = var.project_id
@@ -140,4 +141,3 @@ resource "google_service_account_iam_member" "infra_deployer_act_as_frontend_sa"
   role               = "roles/iam.serviceAccountUser"
   member             = "serviceAccount:${google_service_account.infra_deployer.email}"
 }
-
