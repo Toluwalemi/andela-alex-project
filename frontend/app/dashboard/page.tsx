@@ -59,7 +59,11 @@ export default function DashboardPage() {
             <div className="card-list">
               {portfolios.length ? (
                 portfolios.slice(0, 5).map((portfolio) => (
-                  <Link key={portfolio.id} href={`/portfolio/${portfolio.id}`} className="metric metric-link">
+                  <Link
+                    key={portfolio.id}
+                    href={`/portfolio?portfolioId=${portfolio.id}`}
+                    className="metric metric-link"
+                  >
                     <strong>{portfolio.name}</strong>
                     <span>{new Date(portfolio.created_at).toLocaleString()}</span>
                     <span>Open snapshot</span>

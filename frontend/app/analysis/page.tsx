@@ -34,8 +34,16 @@ export default function AnalysisPage() {
           getRetirementProfile(getToken)
         ]);
         setPortfolios(portfolioResult);
-        if (portfolioResult[0]) {
-          setSelectedPortfolioId(portfolioResult[0].id);
+        const preferredPortfolioId =
+          typeof window !== "undefined"
+            ? new URLSearchParams(window.location.search).get("portfolioId")
+            : null;
+        const initialPortfolioId =
+          preferredPortfolioId && portfolioResult.some((portfolio) => portfolio.id === preferredPortfolioId)
+            ? preferredPortfolioId
+            : portfolioResult[0]?.id;
+        if (initialPortfolioId) {
+          setSelectedPortfolioId(initialPortfolioId);
         }
         if (profileResult) {
           setSavedProfile(profileResult);

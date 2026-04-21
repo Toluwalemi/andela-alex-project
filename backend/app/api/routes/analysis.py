@@ -117,3 +117,21 @@ def get_analysis_report(
         raise HTTPException(status_code=404, detail="Analysis report not found.")
     return AnalysisReportResponse.from_existing_report(report)
 
+
+@router.delete("/analysis/{analysis_report_id}", status_code=204)
+def delete_analysis_report(
+    analysis_report_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> None:
+    report = db.scalar(
+        select(AnalysisReport).where(
+            AnalysisReport.id == analysis_report_id,
+            AnalysisReport.user_id == current_user.id,
+        )
+    )
+    if not report:
+        raise HTTPException(status_code=404, detail="Analysis report not found.")
+
+    db.delete(report)
+    db.commit()

@@ -119,3 +119,8 @@ export async function getAnalysis(getToken: TokenGetter, id: string) {
   return request<AnalysisReport>(`/api/v1/analysis/${id}`, getToken);
 }
 
+export async function deleteAnalysis(getToken: TokenGetter, id: string) {
+  return request<void>(`/api/v1/analysis/${id}`, getToken, {
+    method: "DELETE"
+  });
+}

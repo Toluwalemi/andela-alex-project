@@ -231,10 +231,19 @@ textarea {
   gap: 10px;
 }
 
+.compact-item {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
 .compact-button {
   width: 100%;
   text-align: left;
-  background: var(--surface);
+  background: transparent;
   color: var(--ink);
   border: 1px solid var(--border);
 }
@@ -242,6 +251,19 @@ textarea {
 .compact-button.active {
   border-color: var(--accent);
   background: var(--surface-strong);
+}
+
+.compact-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.button.danger,
+button.danger {
+  background: #8f2d2d;
+  color: #fff;
+  border: 1px solid #8f2d2d;
 }
 
 .metric-link {
