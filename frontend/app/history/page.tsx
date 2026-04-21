@@ -20,10 +20,18 @@ export default function HistoryPage() {
       try {
         const result = await listAnalysis(getToken);
         setReports(result);
-        if (result[0]) {
-          const fullReport = await getAnalysis(getToken, result[0].id);
+        const preferredReportId =
+          typeof window !== "undefined"
+            ? new URLSearchParams(window.location.search).get("reportId")
+            : null;
+        const initialReportId =
+          preferredReportId && result.some((report) => report.id === preferredReportId)
+            ? preferredReportId
+            : result[0]?.id;
+        if (initialReportId) {
+          const fullReport = await getAnalysis(getToken, initialReportId);
           setSelectedReport(fullReport);
-          setSelectedReportId(result[0].id);
+          setSelectedReportId(initialReportId);
         }
       } catch (loadError) {
         setError(loadError instanceof Error ? loadError.message : "Unable to load report history");

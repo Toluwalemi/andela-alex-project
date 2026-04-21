@@ -39,7 +39,10 @@ export default function DashboardPage() {
         <section className="panel">
           <p className="tagline">Welcome back</p>
           <h1>{user?.firstName ? `${user.firstName},` : "Dashboard"}</h1>
-          <p>Use the links below to upload a portfolio, add retirement assumptions, and generate a new analysis report.</p>
+          <p className="muted">
+            Start by saving a portfolio, then run a report to review diversification and retirement
+            progress.
+          </p>
           {error ? <p className="danger">{error}</p> : null}
           <div className="nav-links">
             <Link href="/portfolio" className="button">
@@ -56,10 +59,11 @@ export default function DashboardPage() {
             <div className="card-list">
               {portfolios.length ? (
                 portfolios.slice(0, 5).map((portfolio) => (
-                  <div key={portfolio.id} className="metric">
+                  <Link key={portfolio.id} href={`/portfolio/${portfolio.id}`} className="metric metric-link">
                     <strong>{portfolio.name}</strong>
                     <span>{new Date(portfolio.created_at).toLocaleString()}</span>
-                  </div>
+                    <span>Open snapshot</span>
+                  </Link>
                 ))
               ) : (
                 <p>No portfolios yet.</p>
@@ -71,10 +75,15 @@ export default function DashboardPage() {
             <div className="card-list">
               {reports.length ? (
                 reports.slice(0, 5).map((report) => (
-                  <div key={report.id} className="metric">
+                  <Link
+                    key={report.id}
+                    href={`/history?reportId=${report.id}`}
+                    className="metric metric-link"
+                  >
                     <strong>{report.portfolio_score ?? "N/A"}</strong>
                     <span>{new Date(report.created_at).toLocaleString()}</span>
-                  </div>
+                    <span>Open report</span>
+                  </Link>
                 ))
               ) : (
                 <p>No reports yet.</p>
@@ -86,4 +95,3 @@ export default function DashboardPage() {
     </AuthGuard>
   );
 }
-

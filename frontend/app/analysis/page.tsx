@@ -99,17 +99,23 @@ export default function AnalysisPage() {
         <section className="panel">
           <h1>Run Analysis</h1>
           <p>
-            Alex combines deterministic diversification metrics with an OpenRouter-generated
-            narrative. The output remains informational and always includes assumptions and a
-            disclaimer.
+            Choose a saved portfolio, add a few retirement assumptions, and generate a report that
+            explains concentration, diversification, and retirement progress.
           </p>
+          <div className="notice">
+            The retirement profile helps Alex estimate whether current savings and monthly
+            contributions are on track for the lifestyle the user wants in retirement.
+          </div>
           {error ? <p className="danger">{error}</p> : null}
         </section>
         <section className="grid two">
           <div className="panel">
             <h2>Portfolio selection</h2>
+            <p className="muted">
+              Pick the saved portfolio you want Alex to review.
+            </p>
             <label>
-              Portfolio snapshot
+              Saved portfolio
               <select
                 value={selectedPortfolioId}
                 onChange={(event) => setSelectedPortfolioId(event.target.value)}
@@ -125,6 +131,10 @@ export default function AnalysisPage() {
           </div>
           <div className="panel">
             <h2>Retirement profile</h2>
+            <p className="muted">
+              These numbers are used to estimate a retirement target and compare it with projected
+              future savings.
+            </p>
             <form
               onSubmit={(event) => {
                 event.preventDefault();
@@ -136,6 +146,7 @@ export default function AnalysisPage() {
                   Current age
                   <input
                     type="number"
+                    placeholder="35"
                     value={retirementProfile.current_age}
                     onChange={(event) =>
                       setRetirementProfile((current) => ({
@@ -146,9 +157,10 @@ export default function AnalysisPage() {
                   />
                 </label>
                 <label>
-                  Retirement age
+                  Target retirement age
                   <input
                     type="number"
+                    placeholder="65"
                     value={retirementProfile.target_retirement_age}
                     onChange={(event) =>
                       setRetirementProfile((current) => ({
@@ -161,9 +173,10 @@ export default function AnalysisPage() {
               </div>
               <div className="inline-grid">
                 <label>
-                  Current savings
+                  Current retirement savings
                   <input
                     type="number"
+                    placeholder="100000"
                     value={retirementProfile.current_retirement_savings}
                     onChange={(event) =>
                       setRetirementProfile((current) => ({
@@ -177,6 +190,7 @@ export default function AnalysisPage() {
                   Monthly contribution
                   <input
                     type="number"
+                    placeholder="1000"
                     value={retirementProfile.monthly_contribution}
                     onChange={(event) =>
                       setRetirementProfile((current) => ({
@@ -189,9 +203,10 @@ export default function AnalysisPage() {
               </div>
               <div className="inline-grid">
                 <label>
-                  Target annual retirement spend
+                  Yearly spending goal in retirement
                   <input
                     type="number"
+                    placeholder="60000"
                     value={retirementProfile.target_annual_retirement_spend}
                     onChange={(event) =>
                       setRetirementProfile((current) => ({
@@ -220,7 +235,7 @@ export default function AnalysisPage() {
               </div>
               <div className="nav-links">
                 <button type="submit" className="secondary" disabled={loading}>
-                  Save profile
+                  Save assumptions
                 </button>
                 <button
                   type="button"
@@ -229,7 +244,7 @@ export default function AnalysisPage() {
                     void runAnalysis();
                   }}
                 >
-                  Run report
+                  Generate report
                 </button>
               </div>
             </form>
@@ -240,4 +255,3 @@ export default function AnalysisPage() {
     </AuthGuard>
   );
 }
-

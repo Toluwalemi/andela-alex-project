@@ -87,8 +87,8 @@ export default function PortfolioPage() {
         <section className="panel">
           <h1>Portfolio Input</h1>
           <p className="notice">
-            Alex accepts manual ticker entry and CSV upload. CSV columns should be `ticker`,
-            `quantity`, and optional `average_cost_basis`.
+            Add the investments you own. For CSV uploads, use the columns `ticker`, `quantity`,
+            and optional `average_cost_basis`.
           </p>
           <form
             onSubmit={(event) => {
@@ -113,26 +113,29 @@ export default function PortfolioPage() {
             {holdings.map((holding, index) => (
               <div key={`${index}-${holding.ticker}`} className="inline-grid">
                 <label>
-                  Ticker
+                  Asset symbol
                   <input
+                    placeholder="AAPL"
                     value={holding.ticker}
                     onChange={(event) => updateHolding(index, "ticker", event.target.value)}
                   />
                 </label>
                 <label>
-                  Quantity
+                  Shares owned
                   <input
                     type="number"
                     step="0.0001"
+                    placeholder="10"
                     value={holding.quantity}
                     onChange={(event) => updateHolding(index, "quantity", event.target.value)}
                   />
                 </label>
                 <label>
-                  Avg cost basis
+                  Average buy price
                   <input
                     type="number"
                     step="0.01"
+                    placeholder="185.50"
                     value={holding.average_cost_basis}
                     onChange={(event) =>
                       updateHolding(index, "average_cost_basis", event.target.value)
@@ -157,6 +160,10 @@ export default function PortfolioPage() {
         </section>
         <section className="panel">
           <h2>CSV Upload</h2>
+          <p className="muted">
+            Upload the same information in a spreadsheet: asset symbol, shares owned, and optional
+            average buy price.
+          </p>
           <form
             onSubmit={(event) => {
               event.preventDefault();
@@ -187,4 +194,3 @@ export default function PortfolioPage() {
     </AuthGuard>
   );
 }
-

@@ -139,6 +139,8 @@ button:disabled {
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 14px;
+  display: grid;
+  gap: 4px;
 }
 
 .metric strong {
@@ -240,6 +242,15 @@ textarea {
 .compact-button.active {
   border-color: var(--accent);
   background: var(--surface-strong);
+}
+
+.metric-link {
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+
+.metric-link:hover {
+  border-color: var(--accent);
+  background: #eef2ec;
 }
 
 .eyebrow {
